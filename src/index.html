@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="유튜브 라이브 채팅에서 참여자를 골라 공정하게 도서 당첨자를 추첨합니다." />
+    <title>이지스퍼블리싱 도서 추첨</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e94236'/%3E%3Cpath d='M9 8h11a4 4 0 0 1 4 4v12H13a4 4 0 0 1-4-4V8Z' fill='white'/%3E%3Cpath d='M13 8v12c0 2.2 1.8 4 4 4' fill='none' stroke='%23e94236' stroke-width='2'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://cdn.inflearn.com" />
+    <link rel="stylesheet" href="./styles/main.css" />
+    <script type="module" src="./scripts/app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="이지스퍼블리싱 도서 추첨 홈" data-action="home">
+          <img
+            class="brand-image"
+            src="https://www.easyspub.co.kr/images/logo_pub.png"
+            alt="이지스퍼블리싱"
+            referrerpolicy="no-referrer"
+          />
+          <span class="brand-fallback" aria-hidden="true">이지스퍼블리싱</span>
+          <span class="brand-divider"></span>
+          <span class="brand-product">LIVE BOOK DRAW</span>
+        </a>
+
+        <nav class="steps" aria-label="추첨 진행 단계">
+          <div class="step is-active" data-step="prepare"><span>1</span>추첨 준비</div>
+          <div class="step" data-step="wheel"><span>2</span>돌림판</div>
+          <div class="step" data-step="winner"><span>3</span>당첨자</div>
+        </nav>
+      </header>
+
+      <main>
+        <section id="prepareView" class="view is-active" aria-labelledby="prepareTitle">
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">STEP 01</p>
+              <h1 id="prepareTitle">추첨 준비</h1>
+              <p>채팅을 붙여넣으면 참여 문구를 쓴 계정만 골라 중복 없이 정리합니다.</p>
+            </div>
+            <p id="bookHeadline" class="book-headline" aria-live="polite">도서 제목을 등록해 주세요.</p>
+            <div class="candidate-counter" aria-live="polite">
+              <strong id="candidateCount">0</strong>
+              <span>명 참여</span>
+            </div>
+          </div>
+
+          <div class="book-url-bar">
+            <label for="bookUrl">오늘의 도서 URL</label>
+            <div class="inline-field">
+              <input id="bookUrl" type="url" placeholder="https://www.easyspub.co.kr/..." />
+              <button id="loadBookButton" class="button button-dark" type="button">불러오기</button>
+            </div>
+            <p id="bookLoadStatus" class="helper">도서 URL을 등록하세요.</p>
+          </div>
+
+          <div class="prepare-grid">
+            <article class="panel chat-panel">
+              <div class="panel-head">
+                <div>
+                  <span class="panel-kicker">YOUTUBE CHAT</span>
+                  <h2>참여 채팅 등록</h2>
+                </div>
+                <label class="keyword-field">
+                  <span>참여 문구</span>
+                  <input id="keywordInput" value="참여" maxlength="20" autocomplete="off" />
+                </label>
+              </div>
+
+              <label class="textarea-label" for="chatInput">시작과 그만 사이의 채팅을 붙여넣으세요</label>
+              <textarea
+                id="chatInput"
+                rows="8"
+                placeholder="예시&#10;@hello_world  참여&#10;@booklover&#10;참여&#10;@아타나시오  오늘도 반가워요"
+                spellcheck="false"
+              ></textarea>
+              <div class="chat-actions">
+                <p id="parseSummary" class="parse-summary">아직 분석한 채팅이 없습니다.</p>
+                <button id="parseButton" class="button button-secondary" type="button">채팅 분석</button>
+              </div>
+
+            </article>
+
+            <aside class="panel candidate-panel">
+              <div class="candidate-box">
+                <div class="candidate-box-head">
+                  <h3>추첨 후보</h3>
+                  <button id="clearCandidates" class="text-button" type="button">전체 비우기</button>
+                </div>
+                <div id="candidateList" class="candidate-list empty">
+                  <p>분석된 후보가 여기에 표시됩니다.</p>
+                </div>
+              </div>
+              <button id="goToWheel" class="button button-primary button-large" type="button" disabled>
+                돌림판으로 이동
+                <span aria-hidden="true">→</span>
+              </button>
+            </aside>
+
+            <div class="draw-settings" aria-hidden="true">
+              <div class="panel-head compact">
+                <div>
+                  <span class="panel-kicker">TODAY'S BOOK</span>
+                  <h2>오늘의 도서</h2>
+                </div>
+              </div>
+
+              <div class="book-card" id="bookCard">
+                <div class="book-cover placeholder" id="bookCover">
+                  <span>BOOK</span>
+                </div>
+                <div class="book-copy">
+                  <span class="sponsor-label">이지스퍼블리싱 후원</span>
+                  <h3 id="bookCardTitle">오늘의 책을 등록해 주세요</h3>
+                  <p id="bookCardDescription">URL을 불러오거나 아래에서 직접 입력할 수 있어요.</p>
+                </div>
+              </div>
+
+              <details class="manual-fields">
+                <summary>도서 정보 직접 수정</summary>
+                <label>도서명<input id="bookTitle" autocomplete="off" /></label>
+                <label>저자<input id="bookAuthor" autocomplete="off" /></label>
+                <label>한 줄 정보<input id="bookDescription" autocomplete="off" placeholder="저자 · 출간 정보" /></label>
+                <label>표지 이미지 URL<input id="bookImage" type="url" /></label>
+              </details>
+
+              <div class="notice-settings">
+                <h3>당첨 안내</h3>
+                <label class="field-label" for="contactEmail">보내실 메일 주소</label>
+                <input id="contactEmail" type="email" value="ohjiwan@gmail.com" />
+                <label class="field-label" for="winnerMessage">보낼 내용</label>
+                <textarea id="winnerMessage" rows="3">이름, 전화번호, 주소, 책이름, 사인 유무를 보내주세요.</textarea>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <section id="wheelView" class="view wheel-view" aria-labelledby="wheelTitle">
+          <div class="stage-topline">
+            <button class="back-button" type="button" data-action="back-prepare">← 준비 화면</button>
+            <span class="stage-count"><b id="wheelCount">0</b>명 참여</span>
+          </div>
+
+          <div class="wheel-layout">
+            <div class="wheel-copy">
+              <p class="eyebrow">STEP 02</p>
+              <h1 id="wheelTitle">행운의 주인공은?</h1>
+              <p>버튼을 누르면 돌림판이 시작됩니다.</p>
+              <button id="spinButton" class="button button-primary spin-button" type="button">
+                <span class="play-icon" aria-hidden="true">▶</span>
+                <span id="spinLabel">추첨하기</span>
+              </button>
+              <p class="fair-note">브라우저의 보안 난수를 사용해 한 명을 선택합니다.</p>
+              <div class="stage-book stage-book-featured" id="wheelBook">
+                <div class="stage-book-thumb placeholder"><span>BOOK</span></div>
+                <div><span>오늘의 도서</span><strong>도서 정보 없음</strong></div>
+              </div>
+            </div>
+            <div class="wheel-stage" aria-live="polite">
+              <div class="pointer" aria-hidden="true"></div>
+              <canvas id="wheelCanvas" width="720" height="720" aria-label="참여자 돌림판"></canvas>
+              <div class="wheel-hub"><span>GO!</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="winnerView" class="view winner-view" aria-labelledby="winnerTitle">
+          <div class="confetti-layer" aria-hidden="true"></div>
+          <div class="winner-content">
+            <p class="eyebrow light">STEP 03 · CONGRATULATIONS</p>
+            <h1 id="winnerTitle">당첨을 축하합니다!</h1>
+            <div class="winner-id" id="winnerId">@winner</div>
+
+            <div class="winner-card">
+              <div class="winner-book-cover placeholder"><span>BOOK</span></div>
+              <div class="winner-book-copy">
+                <span>당첨 도서</span>
+                <strong id="winnerBookTitle">오늘의 도서</strong>
+              </div>
+            </div>
+
+            <div class="winner-notice">
+              <span class="mail-icon" aria-hidden="true">✉</span>
+              <div>
+                <p><strong id="winnerEmail">ohjiwan@gmail.com</strong>으로</p>
+                <p id="winnerMessageText">이름, 전화번호, 주소, 책이름, 사인 유무를 보내주세요.</p>
+              </div>
+            </div>
+
+            <div class="winner-actions">
+              <button id="drawAgain" class="button button-light" type="button">당첨자 제외 후 다시 추첨</button>
+              <button class="button button-outline-light" type="button" data-action="home">처음으로</button>
+            </div>
+          </div>
+          <footer>도서 후원 · 이지스퍼블리싱</footer>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "easyspub-book-draw",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "유튜브 라이브 채팅 기반 이지스퍼블리싱 도서 추첨 프로그램",
+  "scripts": {
+    "dev": "node scripts/dev.mjs src 4173",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/dev.mjs dist 4173",
+    "test": "node --test tests/**/*.test.js"
+  }
+}
