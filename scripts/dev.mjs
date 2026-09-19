@@ -1,6 +1,7 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, resolve, sep } from "node:path";
+import { BookPageScrapingError, scrapeBookPage } from "./book-page.mjs";
 
 const directoryName = process.argv[2] || "src";
 const port = Number(process.argv[3] || 4173);
@@ -25,34 +26,12 @@ function sendJson(response, status, data) {
 
 async function serveBookPage(requestUrl, response) {
   const sourceUrl = requestUrl.searchParams.get("url") || "";
-  let target;
-
   try {
-    target = new URL(sourceUrl);
-  } catch {
-    sendJson(response, 400, { error: "올바른 도서 URL이 아닙니다." });
-    return;
-  }
-
-  if (target.protocol !== "https:" || target.hostname !== "www.easyspub.co.kr") {
-    sendJson(response, 400, { error: "이지스퍼블리싱 도서 URL만 등록할 수 있습니다." });
-    return;
-  }
-
-  try {
-    const requestHeaders = { "User-Agent": "easyspub-book-draw/1.0" };
-    const firstResponse = await fetch(target, { headers: requestHeaders });
-    const cookies = typeof firstResponse.headers.getSetCookie === "function"
-      ? firstResponse.headers.getSetCookie()
-      : [firstResponse.headers.get("set-cookie")].filter(Boolean);
-    const sessionCookie = cookies.map((cookie) => cookie.split(";", 1)[0]).join("; ");
-    const upstream = sessionCookie
-      ? await fetch(target, { headers: { ...requestHeaders, Cookie: sessionCookie } })
-      : firstResponse;
-    if (!upstream.ok) throw new Error(`upstream responded with ${upstream.status}`);
-    sendJson(response, 200, { html: await upstream.text() });
-  } catch {
-    sendJson(response, 502, { error: "도서 페이지를 불러오지 못했습니다." });
+    sendJson(response, 200, await scrapeBookPage(sourceUrl));
+  } catch (error) {
+    sendJson(response, error instanceof BookPageScrapingError ? error.status : 500, {
+      error: error instanceof Error ? error.message : "도서 페이지를 불러오지 못했습니다."
+    });
   }
 }
 

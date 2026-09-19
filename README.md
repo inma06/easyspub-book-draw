@@ -80,6 +80,12 @@ npm run preview
 - `npm run build`: `src/`를 `dist/`로 복사합니다.
 - `npm run preview`: `dist/`를 로컬 서버로 실행합니다. 도서 URL 스크래핑도 사용할 수 있습니다.
 
+## Vercel 배포
+
+`vercel.json`에 빌드 명령과 `dist/` 출력 폴더를 설정했습니다. 프로젝트를 Vercel에 연결하면 정적 화면과 `api/book-page.js` Vercel Function이 함께 배포됩니다.
+
+도서 URL 스크래핑은 브라우저에서 `/api/book-page`를 호출하며, Vercel Function이 이지스퍼블리싱 페이지를 요청합니다. Vercel Function은 루트 `api/` 디렉터리의 파일을 API 경로로 배포합니다.
+
 ## 구조
 
 ```text
