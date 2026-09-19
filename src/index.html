@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="유튜브 라이브 채팅에서 참여자를 골라 공정하게 도서 당첨자를 추첨합니다." />
+    <meta name="description" content="유튜브 라이브 채팅에서 후보를 골라 공정하게 도서 당첨자를 추첨합니다." />
     <title>이지스퍼블리싱 도서 추첨</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e94236'/%3E%3Cpath d='M9 8h11a4 4 0 0 1 4 4v12H13a4 4 0 0 1-4-4V8Z' fill='white'/%3E%3Cpath d='M13 8v12c0 2.2 1.8 4 4 4' fill='none' stroke='%23e94236' stroke-width='2'/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://cdn.inflearn.com" />
@@ -38,12 +38,12 @@
             <div>
               <p class="eyebrow">STEP 01</p>
               <h1 id="prepareTitle">추첨 준비</h1>
-              <p>채팅을 붙여넣으면 참여 문구를 쓴 계정만 골라 중복 없이 정리합니다.</p>
+              <p>채팅을 붙여넣으면 도전 문구를 쓴 계정만 골라 중복 없이 정리합니다.</p>
             </div>
             <p id="bookHeadline" class="book-headline" aria-live="polite">도서 제목을 등록해 주세요.</p>
             <div class="candidate-counter" aria-live="polite">
               <strong id="candidateCount">0</strong>
-              <span>명 참여</span>
+              <span>명 등록</span>
             </div>
           </div>
 
@@ -61,11 +61,11 @@
               <div class="panel-head">
                 <div>
                   <span class="panel-kicker">YOUTUBE CHAT</span>
-                  <h2>참여 채팅 등록</h2>
+                  <h2>도전 채팅 등록</h2>
                 </div>
                 <label class="keyword-field">
-                  <span>참여 문구</span>
-                  <input id="keywordInput" value="참여" maxlength="20" autocomplete="off" />
+                  <span>도전 문구</span>
+                  <input id="keywordInput" value="도전" maxlength="20" autocomplete="off" />
                 </label>
               </div>
 
@@ -73,7 +73,7 @@
               <textarea
                 id="chatInput"
                 rows="8"
-                placeholder="예시&#10;@hello_world  참여&#10;@booklover&#10;참여&#10;@아타나시오  오늘도 반가워요"
+                placeholder="예시&#10;@hello_world  도전&#10;@booklover&#10;도전&#10;@아타나시오  오늘도 반가워요"
                 spellcheck="false"
               ></textarea>
               <div class="chat-actions">
@@ -141,7 +141,7 @@
         <section id="wheelView" class="view wheel-view" aria-labelledby="wheelTitle">
           <div class="stage-topline">
             <button class="back-button" type="button" data-action="back-prepare">← 준비 화면</button>
-            <span class="stage-count"><b id="wheelCount">0</b>명 참여</span>
+            <span class="stage-count"><b id="wheelCount">0</b>명 등록</span>
           </div>
 
           <div class="wheel-layout">
@@ -161,7 +161,7 @@
             </div>
             <div class="wheel-stage" aria-live="polite">
               <div class="pointer" aria-hidden="true"></div>
-              <canvas id="wheelCanvas" width="720" height="720" aria-label="참여자 돌림판"></canvas>
+              <canvas id="wheelCanvas" width="720" height="720" aria-label="후보자 돌림판"></canvas>
               <div class="wheel-hub"><span>GO!</span></div>
             </div>
           </div>

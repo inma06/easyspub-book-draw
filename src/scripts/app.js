@@ -106,7 +106,7 @@ function registerChat() {
   if (!elements.chat.value.trim()) return showToast("채팅 내용을 먼저 붙여넣어 주세요.");
   const result = service.registerChat(elements.chat.value, elements.keyword.value);
   renderCandidates();
-  elements.parseSummary.textContent = result.candidates.length ? `${result.candidates.length}명 등록 · 중복 ${result.duplicates}건 제외` : `‘${elements.keyword.value || "참여"}’를 쓴 계정을 찾지 못했습니다.`;
+  elements.parseSummary.textContent = result.candidates.length ? `${result.candidates.length}명 등록 · 중복 ${result.duplicates}건 제외` : `‘${elements.keyword.value || "도전"}’를 쓴 계정을 찾지 못했습니다.`;
   elements.parseSummary.className = result.candidates.length ? "parse-summary success" : "parse-summary";
   if (result.candidates.length) showToast(`${result.candidates.length}명의 후보를 등록했습니다.`);
 }
@@ -198,12 +198,12 @@ window.addEventListener("resize", () => { if (uiState.currentView === "wheel") r
 const modelContext = document.modelContext;
 if (modelContext?.registerTool) {
   Promise.resolve(modelContext.registerTool({
-    name: "prepare_book_draw", title: "도서 추첨 준비", description: "유튜브 채팅과 참여 문구를 입력해 중복을 제거한 추첨 후보를 준비 화면에 등록합니다.",
+    name: "prepare_book_draw", title: "도서 추첨 준비", description: "유튜브 채팅과 도전 문구를 입력해 중복을 제거한 추첨 후보를 준비 화면에 등록합니다.",
     inputSchema: { type: "object", properties: { chatText: { type: "string", minLength: 1 }, keyword: { type: "string", minLength: 1, maxLength: 20 } }, required: ["chatText", "keyword"], additionalProperties: false },
     annotations: { readOnlyHint: false, untrustedContentHint: true },
     execute(input) {
       const keyword = normalizeChatText(input?.keyword);
-      if (!keyword || keyword.length > 20 || !input?.chatText?.trim()) throw new TypeError("유효한 채팅 원문과 20자 이하의 참여 문구를 입력해 주세요.");
+      if (!keyword || keyword.length > 20 || !input?.chatText?.trim()) throw new TypeError("유효한 채팅 원문과 20자 이하의 도전 문구를 입력해 주세요.");
       elements.chat.value = input.chatText;
       elements.keyword.value = keyword;
       const result = service.registerChat(input.chatText, keyword);

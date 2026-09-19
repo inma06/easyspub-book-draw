@@ -9,7 +9,7 @@ test("당첨자를 제외한 재추첨 후보를 유지한다", () => {
     randomIndex: () => 1,
   });
 
-  service.registerChat("ignored", "참여");
+  service.registerChat("ignored", "도전");
   assert.equal(service.selectWinner(), "@two");
   assert.deepEqual(service.redrawWithoutWinner(), ["@one", "@three"]);
 });
